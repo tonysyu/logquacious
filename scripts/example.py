@@ -20,3 +20,7 @@ def divide(numerator, denominator):
 
 
 divide(1, 0)
+
+
+with log.and_suppress(ValueError, msg="It's ok, mistakes happen"):
+    raise ValueError('Test error')

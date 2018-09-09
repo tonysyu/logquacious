@@ -56,15 +56,13 @@ That isn't a very interesting example. In addition to basic logging,
     with log.context.debug('greetings'):
         print('Hello!')
 
-That would output the following:
-
 .. code-block:: console
 
     [DEBUG] Start greetings
     Hello!
     [DEBUG] Finish greetings
 
-The same attribute can be used as an attribute, as well:
+The same attribute can be used as a decorator, as well:
 
 .. code-block:: python
 
@@ -77,13 +75,29 @@ The same attribute can be used as an attribute, as well:
 
     divide(1, 0)
 
-Which gives the following output:
-
 .. code-block:: console
 
     [INFO] Start divide
     [WARNING] Attempted division by zero. Returning None
     [INFO] Finish divide
+
+There's also a special context manager for suppressing errors and logging:
+
+.. code-block:: python
+
+    with log.and_suppress(ValueError, msg="It's ok, mistakes happen"):
+        raise ValueError('Test error')
+
+.. code-block:: console
+
+    [ERROR] It's ok, mistakes happen
+    Traceback (most recent call last):
+      File "/Users/tyu/code/logquacious/logquacious/logmanager.py", line 103, in and_suppress
+        yield
+      File "scripts/example.py", line 26, in <module>
+        raise ValueError('Test error')
+    ValueError: Test error
+
 
 Credits
 -------
