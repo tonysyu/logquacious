@@ -12,7 +12,6 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.0',
 ]
 
 setup_requirements = [
@@ -51,11 +50,6 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     description="Logging utilities to help you over-communicate",
-    entry_points={
-        'console_scripts': [
-            'logquacious=logquacious.cli:main',
-        ],
-    },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
