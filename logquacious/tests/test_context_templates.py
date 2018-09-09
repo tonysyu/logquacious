@@ -4,6 +4,7 @@ import mock
 import pytest
 
 from .. import constants, context_templates
+from ..context_templates import DEFAULT_TEMPLATES, ContextTemplates
 from .utils import StartsWith
 
 
@@ -45,25 +46,22 @@ FINISH_KEYS = BASE_FINISH_KEYS + [
 class TestContextTemplates:
 
     def test_config_missing_start(self):
-        with pytest.raises(KeyError):
-            context_templates.ContextTemplates({'finish': 'placeholder'})
+        templates = ContextTemplates({'finish': 'custom'})
+        assert templates['finish'] == 'custom'
+        assert templates['start'] == DEFAULT_TEMPLATES['start']
 
     def test_config_missing_finish(self):
-        with pytest.raises(KeyError):
-            context_templates.ContextTemplates({'start': 'placeholder'})
+        templates = ContextTemplates({'start': 'custom'})
+        assert templates['start'] == 'custom'
+        assert templates['finish'] == DEFAULT_TEMPLATES['finish']
 
     def test_null_config(self):
-        config = context_templates.ContextTemplates()
-        assert 'start' in config
-        assert 'finish' in config
+        config = ContextTemplates()
+        assert config == DEFAULT_TEMPLATES
 
     def test_unknown_config_key(self):
         with mock.patch.object(context_templates, '_LOG') as mock_log:
-            context_templates.ContextTemplates({
-                'start': 'placeholder',
-                'finish': 'placeholder',
-                'BAD-KEY': 'placeholder',
-            })
+            ContextTemplates({'BAD-KEY': 'placeholder'})
         mock_log.warning.assert_called_once_with(
             StartsWith("%s given `config_dict` with unknown keys"),
             'ContextTemplates',
@@ -76,7 +74,7 @@ class TestMinimalContextTemplates:
     def setup(self):
         self.start_text = '__start__'
         self.finish_text = '__finish__'
-        self.config = context_templates.ContextTemplates({
+        self.config = ContextTemplates({
             'start': self.start_text,
             'finish': self.finish_text,
         })
@@ -107,7 +105,7 @@ class TestLevelSpecificContextTemplates:
             'finish.{}'.format(level): self.finish_template.format(level)
             for level in constants.LOG_LEVEL_NAMES
         })
-        self.config = context_templates.ContextTemplates(config_dict)
+        self.config = ContextTemplates(config_dict)
 
     @pytest.mark.parametrize('level', constants.LOG_LEVEL_NAMES)
     def test_start(self, level):

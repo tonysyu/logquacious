@@ -42,7 +42,7 @@ def _build_cascade_map():
 CASCADE_MAP = _build_cascade_map()
 
 
-DEFAULT_CONFIG_DICT = {
+DEFAULT_TEMPLATES = {
     'start': 'Start {label}',
     'finish': 'Finish {label}',
 }
@@ -51,9 +51,10 @@ DEFAULT_CONFIG_DICT = {
 class ContextTemplates(CascadingConfig):
 
     def __init__(self, config_dict=None):
-        config_dict = config_dict or DEFAULT_CONFIG_DICT
-        assert_key_in_config_dict('start', config_dict)
-        assert_key_in_config_dict('finish', config_dict)
+        config_dict = config_dict or DEFAULT_TEMPLATES
+        config_dict = config_dict.copy()
+        config_dict.setdefault('start', DEFAULT_TEMPLATES['start'])
+        config_dict.setdefault('finish', DEFAULT_TEMPLATES['finish'])
         self._warn_if_given_unknown_keys(config_dict.keys())
 
         super(ContextTemplates, self).__init__(config_dict, CASCADE_MAP)
@@ -74,8 +75,3 @@ class ContextTemplates(CascadingConfig):
         if isinstance(templates, cls):
             return templates
         return cls(templates)
-
-
-def assert_key_in_config_dict(key, config_dict):
-    if key not in config_dict:
-        raise KeyError("Key {!r} must be in configuration.".format(key))
