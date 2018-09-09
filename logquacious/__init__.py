@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-
 """Top-level package for logquacious."""
 
-__author__ = """Tony S Yu"""
+__author__ = 'Tony S Yu'
 __email__ = 'tsyu80@gmail.com'
 __version__ = '0.1.0'
+
+from .logmanager import LogManager
+
+
+__all__ = ['LogManager']

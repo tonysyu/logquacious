@@ -11,11 +11,28 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', ]
+requirements = [
+    'Click>=6.0',
+]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = [
+    'pytest-runner',
+]
 
-test_requirements = ['pytest', ]
+test_requirements = [
+    'coverage',
+    'flake8',
+    'mock',
+    'pytest',
+    'pytest-cov',
+    'pytest-flake8',
+    'pytest-sugar',
+]
+
+dev_requirements = [
+    'ipdb',
+    'ipython',
+] + test_requirements
 
 setup(
     author="Tony S Yu",
@@ -49,6 +66,9 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
+    extras_require={
+        'dev': dev_requirements,
+    },
     url='https://github.com/tonysyu/logquacious',
     version='0.1.0',
     zip_safe=False,
