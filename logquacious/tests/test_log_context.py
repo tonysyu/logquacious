@@ -3,7 +3,7 @@ import mock
 
 import pytest
 
-from .. import logcontext
+from .. import log_context
 
 
 logging.basicConfig()
@@ -24,7 +24,7 @@ class TestLogContext:
 
     def setup(self):
         self.logger = mock.Mock(spec=logging.Logger)
-        self.context = logcontext.LogContext(self.logger)
+        self.context = log_context.LogContext(self.logger)
 
     @func_name_and_level_parameters
     def test_context_delegates_to_logger(self, func_name, level):

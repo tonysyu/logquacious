@@ -2,7 +2,7 @@ import logging
 from contextlib import contextmanager
 
 from . import utils
-from .logcontext import LogContext
+from .log_context import LogContext
 
 
 class LogManager:

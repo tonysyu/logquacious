@@ -3,14 +3,14 @@ import mock
 
 import pytest
 
-from .. import logmanager
+from .. import log_manager
 
 
 class TestLogManager:
 
     def setup(self):
         self.logger = mock.Mock(spec=logging.Logger)
-        self.log = logmanager.LogManager(self.logger)
+        self.log = log_manager.LogManager(self.logger)
 
     def test_log(self):
         self.log.log(logging.INFO, 'info msg')

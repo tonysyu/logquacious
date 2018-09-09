@@ -92,7 +92,7 @@ There's also a special context manager for suppressing errors and logging:
 
     [ERROR] It's ok, mistakes happen
     Traceback (most recent call last):
-      File "/Users/tyu/code/logquacious/logquacious/logmanager.py", line 103, in and_suppress
+      File "/Users/tyu/code/logquacious/logquacious/log_manager.py", line 103, in and_suppress
         yield
       File "scripts/example.py", line 26, in <module>
         raise ValueError('Test error')

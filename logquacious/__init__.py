@@ -5,7 +5,7 @@ __author__ = 'Tony S Yu'
 __email__ = 'tsyu80@gmail.com'
 __version__ = '0.1.0'
 
-from .logmanager import LogManager
+from .log_manager import LogManager
 
 
 __all__ = ['LogManager']
