@@ -20,11 +20,9 @@ class TestLogManager:
         'debug',
         'info',
         'warn',
-        'warning',
         'error',
         'exception',
         'fatal',
-        'critical',
     ])
     def test_delegate_to_logger(self, level):
         log_method = getattr(self.log, level)

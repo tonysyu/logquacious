@@ -29,9 +29,9 @@ class LogManager:
         [DEBUG] Finish context manager
     """
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, templates=None):
         self.logger = utils.get_logger(name)
-        self.context = LogContext(self.logger)
+        self.context = LogContext(self.logger, templates)
 
     def log(self, level, msg, *args, **kwargs):
         """Log 'msg % args' with integer severity 'level'.
@@ -61,13 +61,6 @@ class LogManager:
         """
         return self.logger.warn(msg, *args, **kwargs)
 
-    def warning(self, msg, *args, **kwargs):
-        """Log 'msg % args' with integer severity `logging.WARNING`.
-
-        This is a thin wrapper around `logging.Logger.warning`.
-        """
-        return self.logger.warning(msg, *args, **kwargs)
-
     def error(self, msg, *args, **kwargs):
         """Log 'msg % args' with integer severity `logging.ERROR`.
 
@@ -88,13 +81,6 @@ class LogManager:
         This is a thin wrapper around `logging.Logger.fatal`.
         """
         return self.logger.fatal(msg, *args, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):
-        """Log 'msg % args' with integer severity `logging.CRITICAL`.
-
-        This is a thin wrapper around `logging.Logger.critical`.
-        """
-        return self.logger.critical(msg, *args, **kwargs)
 
     @contextmanager
     def and_suppress(self, allowed_exceptions,
