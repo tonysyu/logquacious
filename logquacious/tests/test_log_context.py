@@ -12,7 +12,7 @@ logging.basicConfig()
 func_name_and_level_parameters = pytest.mark.parametrize('func_name, level', [
     ('debug', logging.DEBUG),
     ('info', logging.INFO),
-    ('warn', logging.WARNING),
+    ('warning', logging.WARNING),
     ('error', logging.ERROR),
     ('fatal', logging.CRITICAL),
 ])

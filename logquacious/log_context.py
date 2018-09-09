@@ -14,7 +14,7 @@ class LogContext:
     Attributes:
         debug: Decortor/context-manager with level logging.DEBUG.
         info: Decortor/context-manager with level logging.INFO.
-        warn: Decortor/context-manager with level logging.WARNING.
+        warning: Decortor/context-manager with level logging.WARNING.
         error: Decortor/context-manager with level logging.ERROR.
         fatal: Decortor/context-manager with level logging.CRITICAL.
     """
@@ -24,7 +24,7 @@ class LogContext:
         self.logger = utils.get_logger(logger)
         self.debug = _ContextLoggerFactory(logger, logging.DEBUG, templates)
         self.info = _ContextLoggerFactory(logger, logging.INFO, templates)
-        self.warn = _ContextLoggerFactory(logger, logging.WARNING, templates)
+        self.warning = _ContextLoggerFactory(logger, logging.WARNING, templates)  # noqa: E501
         self.error = _ContextLoggerFactory(logger, logging.ERROR, templates)
         self.fatal = _ContextLoggerFactory(logger, logging.CRITICAL, templates)
 

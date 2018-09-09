@@ -54,12 +54,12 @@ class LogManager:
         """
         return self.logger.info(msg, *args, **kwargs)
 
-    def warn(self, msg, *args, **kwargs):
+    def warning(self, msg, *args, **kwargs):
         """Log 'msg % args' with integer severity `logging.WARNING`.
 
-        This is a thin wrapper around `logging.Logger.warn`.
+        This is a thin wrapper around `logging.Logger.warning`.
         """
-        return self.logger.warn(msg, *args, **kwargs)
+        return self.logger.warning(msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
         """Log 'msg % args' with integer severity `logging.ERROR`.

@@ -19,7 +19,7 @@ class TestLogManager:
     @pytest.mark.parametrize('level', [
         'debug',
         'info',
-        'warn',
+        'warning',
         'error',
         'exception',
         'fatal',

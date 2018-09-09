@@ -1,3 +1,4 @@
+import logging
 from itertools import chain
 
 from . import constants
@@ -5,6 +6,9 @@ from .cascading_config import CascadingConfig
 
 
 __all__ = ['CASCADE_MAP', 'ContextTemplates']
+
+
+_LOG = logging.getLogger(__name__)
 
 
 def _build_cascade_map():
@@ -50,8 +54,16 @@ class ContextTemplates(CascadingConfig):
         config_dict = config_dict or DEFAULT_CONFIG_DICT
         assert_key_in_config_dict('start', config_dict)
         assert_key_in_config_dict('finish', config_dict)
+        self._warn_if_given_unknown_keys(config_dict.keys())
 
         super(ContextTemplates, self).__init__(config_dict, CASCADE_MAP)
+
+    def _warn_if_given_unknown_keys(self, config_keys):
+        known_keys = chain(CASCADE_MAP.keys(), ['start', 'finish'])
+        unknown_keys = set(config_keys).difference(known_keys)
+        if any(unknown_keys):
+            _LOG.warning("%s given `config_dict` with unknown keys: %s",
+                         self.__class__.__name__, unknown_keys)
 
     def __missing__(self, key):
         known_keys = set(chain(self.keys(), self.cascade_map.keys()))
