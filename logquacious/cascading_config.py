@@ -1,9 +1,9 @@
-from collections import deque
+from collections import abc, deque
 
 from .utils import is_sequence
 
 
-class CascadingConfig(dict):
+class CascadingConfig(abc.Mapping):
     """Cascading configuration values.
 
     This class allows you to define parameter names that can match exactly, but
@@ -23,18 +23,24 @@ class CascadingConfig(dict):
     kwargs : dict
         Keyword arguments for initializing dict.
     """
-    def __init__(self, config_values=None, cascade_map=None, **kwargs):
-        assert 'cascade_map' not in kwargs
-        assert 'config_values' not in kwargs
-
+    def __init__(self, config_values=None, cascade_map=None):
         if config_values is None:
             config_values = {}
 
-        super(CascadingConfig, self).__init__(config_values, **kwargs)
+        self._config_values = config_values.copy()
 
         if cascade_map is None:
             cascade_map = {}
         self.cascade_map = cascade_map.copy()
+
+    def __getitem__(self, key):
+        return self._config_values[key]
+
+    def __iter__(self):
+        return self._config_values.__iter__()
+
+    def __len__(self):
+        return len(self._config_values)
 
     def get(self, name, default=None, _prev=None):
         """Return best matching config value for `name`.
@@ -58,7 +64,7 @@ class CascadingConfig(dict):
 
         Instead, you would create a config class and write::
 
-            >>> config = CascadingConfig(a=0)
+            >>> config = CascadingConfig({'a': 0})
             >>> def print_value(key, **kwargs):
             ...     print(kwargs.get(key, config.get(key)))
             >>> print_value('a')
@@ -100,7 +106,7 @@ class CascadingConfig(dict):
         1
         """
         if name in self:
-            return self[name]
+            return self._config_values[name]
         elif default is not None:
             return default
         elif name not in self.cascade_map:
@@ -108,7 +114,7 @@ class CascadingConfig(dict):
         else:
             for name in self._iter_names(name):
                 if name in self:
-                    return self[name]
+                    return self._config_values[name]
 
     def cascade_list(self, name):
         """Return list of cascade hierarchy for a given configuration name."""
