@@ -1,9 +1,15 @@
+from collections import deque
+
+from .utils import is_sequence
+
+
 class CascadingConfig(dict):
     """Cascading configuration values.
 
     This class allows you to define parameter names that can match exactly, but
     if it doesn't, parameter names will be searched as defined by
-    `cascade_map`.
+    `cascade_map`. `cascade_map` basically defines edges of a dependency graph,
+    which is then used for a breadth-first search of parameter values.
 
     Parameters
     ----------
@@ -100,8 +106,7 @@ class CascadingConfig(dict):
         elif name not in self.cascade_map:
             return None
         else:
-            starting_name = name
-            for name in self._iter_names(starting_name):
+            for name in self._iter_names(name):
                 if name in self:
                     return self[name]
 
@@ -116,15 +121,24 @@ class CascadingConfig(dict):
     def __missing__(self, name):
         return None
 
-    def _iter_names(self, starting_name):
+    def _iter_names(self, name):
         visited = set()
-        name = starting_name
-        while name in self.cascade_map:
-            if name in visited:
-                msg = ('`cascade_map` defines circular dependency. '
-                       'Start: {}, Revisited: {}')
-                raise KeyError(msg.format(starting_name, name))
+        q = deque()
+
+        def not_visited(key):
+            return key not in visited and key not in q
+
+        def update_queue(name):
+            if name in self.cascade_map:
+                children = self.cascade_map[name]
+                if is_sequence(children):
+                    q.extend(filter(not_visited, children))
+                elif not_visited(children):
+                    q.append(children)
+
+        q.append(name)
+        while q:
+            name = q.popleft()
             yield name
             visited.add(name)
-            name = self.cascade_map[name]
-        yield name
+            update_queue(name)
