@@ -99,6 +99,60 @@ There's also a special context manager for suppressing errors and logging:
     ValueError: Test error
 
 
+Configuration
+-------------
+
+The message templates used by `LogManager.context` can be configured to your
+liking by passing a `context_templates` argument to `LogManager`:
+
+.. code-block:: python
+
+    log = logquacious.LogManager(__name__, context_templates={
+        'context.start': '=============== Enter {label} ===============',
+        'context.finish': '=============== Exit {label} ===============',
+    })
+
+    with log.context.debug('greetings'):
+        print('Hello!')
+
+.. code-block:: console
+
+    [DEBUG] =============== Enter greetings ===============
+    Hello!
+    [DEBUG] =============== Exit greetings ===============
+
+
+The general format for `context_templates` keys is::
+
+    [CONTEXT_TYPE.]('start'|'finish')[.LOG_LEVEL_NAME]
+
+where square-brackes marks optional fields.
+
+``CONTEXT_TYPE`` can be any of the following:
+- 'function': Template used when called as a decorator.
+- 'context': Template used when called as a context manager.
+
+``LOG_LEVEL_NAME`` can be any of the following logging levels:
+- 'DEBUG'
+- 'INFO'
+- 'WARNING'
+- 'ERROR'
+- 'CRITICAL'
+
+For example, consider the cascade graph for ``function.start.DEBUG``, which
+looks like::
+
+                    function.start.DEBUG
+                         /       \
+               start.DEBUG       function.start
+                         \       /
+                           start
+
+The cascade is performed using a breadth-first search. If
+`function.start.DEBUG` is not defined, check `start.DEBUG` then check
+`function.start` *BEFORE* checking `start`.
+
+
 Credits
 -------
 

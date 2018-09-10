@@ -29,9 +29,9 @@ class LogManager:
         [DEBUG] Finish context manager
     """
 
-    def __init__(self, name=None, templates=None):
+    def __init__(self, name=None, context_templates=None):
         self.logger = utils.get_logger(name)
-        self.context = LogContext(self.logger, templates)
+        self.context = LogContext(self.logger, context_templates)
 
     def log(self, level, msg, *args, **kwargs):
         """Log 'msg % args' with integer severity 'level'.

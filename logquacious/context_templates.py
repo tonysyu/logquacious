@@ -12,14 +12,14 @@ _LOG = logging.getLogger(__name__)
 
 
 def _build_cascade_map():
-    base_cascade_map = {
+    start_cascade_map = {
         'start.{}'.format(name): 'start'
         for name in constants.LOG_LEVEL_NAMES
     }
-    base_cascade_map.update({
+    finish_cascade_map = {
         'finish.{}'.format(name): 'finish'
         for name in constants.LOG_LEVEL_NAMES
-    })
+    }
 
     cascade_map = {
         'function.start': 'start',
@@ -28,14 +28,23 @@ def _build_cascade_map():
         'context.finish': 'finish',
     }
     cascade_map.update({
-        'function.{}'.format(name): name
-        for name in base_cascade_map.keys()
+        'function.{}'.format(name): [name, 'function.start']
+        for name in start_cascade_map.keys()
     })
     cascade_map.update({
-        'context.{}'.format(name): name
-        for name in base_cascade_map.keys()
+        'context.{}'.format(name): [name, 'context.start']
+        for name in start_cascade_map.keys()
     })
-    cascade_map.update(base_cascade_map)
+    cascade_map.update({
+        'function.{}'.format(name): [name, 'function.finish']
+        for name in finish_cascade_map.keys()
+    })
+    cascade_map.update({
+        'context.{}'.format(name): [name, 'context.finish']
+        for name in finish_cascade_map.keys()
+    })
+    cascade_map.update(start_cascade_map)
+    cascade_map.update(finish_cascade_map)
     return cascade_map
 
 

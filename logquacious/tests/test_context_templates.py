@@ -9,6 +9,7 @@ from .utils import StartsWith
 
 
 CONTEXT_TYPES = ['function', 'context']
+STAGES = ['start', 'finish']
 START_LEVEL_TEMPLATES = [
     'start.{}',
     'function.start.{}',
@@ -93,10 +94,7 @@ class TestLevelSpecificContextTemplates:
     def setup(self):
         self.start_template = 'Start {}'
         self.finish_template = 'Finish {}'
-        config_dict = {
-            'start': 'ignore',
-            'finish': 'ignore',
-        }
+        config_dict = {}
         config_dict.update({
             'start.{}'.format(level): self.start_template.format(level)
             for level in constants.LOG_LEVEL_NAMES
@@ -118,3 +116,40 @@ class TestLevelSpecificContextTemplates:
         for template in FINISH_LEVEL_TEMPLATES:
             key = template.format(level)
             assert self.config.get(key) == self.finish_template.format(level)
+
+
+class TestSecondaryContextTemplates:
+    """Test secondary cascade for context templates.
+
+    For example, consider the cascade pattern for `function.start.DEBUG`.
+    which has a cascade graph that looks like:
+
+                        function.start.DEBUG
+                             /       \
+                   start.DEBUG       function.start
+                             \       /
+                               start
+
+    The cascade is performed using a breadth-first search. If
+    `function.start.DEBUG` is not defined, check `start.DEBUG` then check
+    `function.start` *BEFORE* checking `start`. This test case only defines
+    `function.start` (and similar values) to check this secondary cascade
+    """
+
+    def setup(self):
+        self.config_keys = [
+            '{}.{}'.format(context, stage)
+            for context, stage in itertools.product(CONTEXT_TYPES, STAGES)
+        ]
+        self.config = ContextTemplates(
+            {name: name for name in self.config_keys}
+        )
+
+    @pytest.mark.parametrize('context, stage, level', [
+        args for args in itertools.product(
+            CONTEXT_TYPES, STAGES, constants.LOG_LEVEL_NAMES,
+        )
+    ])
+    def test_secondary_context_match(self, context, stage, level):
+        key = '{}.{}.{}'.format(context, stage, level)
+        assert self.config.get(key) == '{}.{}'.format(context, stage)
