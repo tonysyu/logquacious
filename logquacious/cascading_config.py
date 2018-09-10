@@ -28,7 +28,7 @@ class CascadingConfig(dict):
 
         if cascade_map is None:
             cascade_map = {}
-        self.cascade_map = cascade_map
+        self.cascade_map = cascade_map.copy()
 
     def get(self, name, default=None, _prev=None):
         """Return best matching config value for `name`.
@@ -81,7 +81,7 @@ class CascadingConfig(dict):
         ...                          cascade_map={'arrow.size': 'size'})
         >>> config.get('size')
         0
-        >>> top_choice={'size': 1}
+        >>> top_choice = {'size': 1}
         >>> top_choice.get('size', config.get('size'))
         1
         >>> config.get('non-existent', 'unknown')
@@ -100,19 +100,14 @@ class CascadingConfig(dict):
         elif name not in self.cascade_map:
             return None
         else:
-            _prev = _append_to_cascade(name, _prev)
-            return self.get(self.cascade_map[name], _prev=_prev)
+            starting_name = name
+            for name in self._iter_names(starting_name):
+                if name in self:
+                    return self[name]
 
-    def cascade_list(self, name, _prev=None):
+    def cascade_list(self, name):
         """Return list of cascade hierarchy for a given configuration name."""
-        path = []
-        while True:
-            path = _append_to_cascade(name, path)
-            try:
-                name = self.cascade_map[name]
-            except KeyError:
-                break
-        return path
+        return list(self._iter_names(name))
 
     def cascade_path(self, name):
         """Return string of describing cascade."""
@@ -121,19 +116,15 @@ class CascadingConfig(dict):
     def __missing__(self, name):
         return None
 
-
-def _append_to_cascade(name, previous=None):
-    """Append name to previous nodes in configuration cascade.
-
-    If name is already in the previous steps of the cascade, raise an error
-    to indicate a circular dependence.
-    """
-    if previous is None:
-        previous = []
-
-    if name in previous:
-        msg = '`cascade_map` defines circular dependency: {}'
-        raise KeyError(msg.format(' -> '.join(previous + [name])))
-
-    previous.append(name)
-    return previous
+    def _iter_names(self, starting_name):
+        visited = set()
+        name = starting_name
+        while name in self.cascade_map:
+            if name in visited:
+                msg = ('`cascade_map` defines circular dependency. '
+                       'Start: {}, Revisited: {}')
+                raise KeyError(msg.format(starting_name, name))
+            yield name
+            visited.add(name)
+            name = self.cascade_map[name]
+        yield name
