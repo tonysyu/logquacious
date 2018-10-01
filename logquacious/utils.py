@@ -32,7 +32,10 @@ def format_function_args(args, kwargs,
         return ''
 
     kv_pairs = (
-        (f"{key}={value!r}" for key, value in kwargs.items())
+        (
+            "{key}={value!r}".format(key=key, value=value)
+            for key, value in kwargs.items()
+        )
         if show_kwargs else ()
     )
     args = (repr(a) for a in args) if show_args else ()
