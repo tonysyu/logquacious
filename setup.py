@@ -28,10 +28,19 @@ test_requirements = [
     'pytest-sugar',
 ]
 
+doc_requirements = [
+    'manuel',
+    'sphinx',
+    'sphinx-autobuild',
+    'sphinx_rtd_theme',
+    'sphinxcontrib-napoleon',
+]
+
 dev_requirements = [
+    'bumpversion',
     'ipdb',
     'ipython',
-] + test_requirements
+] + test_requirements + doc_requirements
 
 setup(
     author="Tony S Yu",
