@@ -28,7 +28,7 @@ with log.and_suppress(ValueError, msg="It's ok, mistakes happen"):
 
 
 log = LogManager(__name__, context_templates={
-    'function.start': 'Called `{label}`',
+    'function.start': 'Called `{label}({arguments})`',
     'function.finish': 'Return from `{label}`',
     'context.start.ERROR': '=============== Enter {label} ===============',
     'context.finish.ERROR': '=============== Exit {label} ===============',
@@ -40,6 +40,13 @@ def no_op():
     pass
 
 no_op()
+
+
+@log.context.info(show_args=True)
+def func_with_args(*args):
+    pass
+
+func_with_args('a', 1)
 
 with log.context.error('error context'):
     print('This should never have happened! What did you do?')

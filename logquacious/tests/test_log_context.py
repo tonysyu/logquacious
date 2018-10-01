@@ -53,3 +53,25 @@ class TestLogContext:
             mock.call(level, 'Start function'),
             mock.call(level, 'Finish function'),
         ])
+
+    @func_name_and_level_parameters
+    def test_decorator_with_args_delegates_to_logger(self, func_name, level):
+        context = log_context.LogContext(self.logger, templates={
+            'function.start': 'Called `{label}({arguments})`',
+            'function.finish': 'Return from `{label}`',
+        })
+        decorator = getattr(context, func_name)
+
+        @decorator(show_args=True, show_kwargs=True)
+        def function(a, b=None):
+            pass
+
+        # Decorating the function shouldn't log anything.
+        self.logger.log.assert_not_called()
+
+        function('a', b=1)
+
+        self.logger.log.assert_has_calls([
+            mock.call(level, "Called `function('a', b=1)`"),
+            mock.call(level, 'Return from `function`'),
+        ])

@@ -1,7 +1,7 @@
+import functools
 import logging
 
 from . import utils
-from ._compat import ContextDecorator
 from .context_templates import ContextTemplates
 
 
@@ -29,18 +29,32 @@ class LogContext:
         self.fatal = _ContextLoggerFactory(logger, logging.CRITICAL, templates)
 
 
-class _ContextLogger(ContextDecorator):
+class _BaseContextLogger:
 
-    def __init__(self, logger, log_level, label, context_type, templates):
+    context_type = None
+
+    def __init__(self, templates, logger, log_level=logging.INFO, label=None):
         self.logger = utils.get_logger(logger)
         self.log_level = log_level
         self.label = label
 
         level_name = logging.getLevelName(log_level)
-        start_key = '{}.start.{}'.format(context_type, level_name)
+        start_key = '{}.start.{}'.format(self.context_type, level_name)
         self.start_template = templates.get(start_key)
-        finish_key = '{}.finish.{}'.format(context_type, level_name)
+        finish_key = '{}.finish.{}'.format(self.context_type, level_name)
         self.finish_template = templates.get(finish_key)
+
+    def log(self, msg, *args, **kwargs):
+        self.logger.log(self.log_level, msg, *args, **kwargs)
+
+
+class ContextLogger(_BaseContextLogger):
+
+    context_type = 'context'
+
+    def __init__(self, templates, logger, log_level=logging.INFO, label=None):
+        super(ContextLogger, self).__init__(templates, logger,
+                                            log_level=log_level, label=label)
 
     def __enter__(self):
         self.log(self.start_template.format(label=self.label))
@@ -48,8 +62,37 @@ class _ContextLogger(ContextDecorator):
     def __exit__(self, *args, **kwds):
         self.log(self.finish_template.format(label=self.label))
 
-    def log(self, msg, *args, **kwargs):
-        self.logger.log(self.log_level, msg, *args, **kwargs)
+
+class FunctionContextLogger(_BaseContextLogger):
+
+    context_type = 'function'
+
+    def __init__(self, templates, logger, log_level=logging.INFO, label=None,
+                 show_args=False, show_kwargs=False):
+        super(FunctionContextLogger, self).__init__(
+            templates, logger, log_level=log_level, label=label
+        )
+        self._format_function_args = functools.partial(
+            utils.format_function_args,
+            show_args=show_args,
+            show_kwargs=show_kwargs,
+        )
+
+    def __call__(self, func):
+        self.label = func.__name__
+
+        @functools.wraps(func)
+        def decorated(*args, **kwargs):
+            arg_string = self._format_function_args(args, kwargs)
+            log_kwargs = {'label': self.label, 'arguments': arg_string}
+
+            self.log(self.start_template.format(**log_kwargs))
+            output = func(*args, **kwargs)
+            self.log(self.finish_template.format(**log_kwargs))
+
+            return output
+
+        return decorated
 
 
 class _ContextLoggerFactory:
@@ -63,21 +106,22 @@ class _ContextLoggerFactory:
         self.log_level = log_level
         self.templates = templates
 
-    def __call__(self, func_or_label):
-        if callable(func_or_label):
-            label = func_or_label.__name__
-            return self._create_logging_decorator(func_or_label, label,
-                                                  'function')
-        return self._create_context_logger(func_or_label, 'context')
-
-    def _create_logging_decorator(self, func, label, context_type, **kwargs):
-        return self._create_context_logger(label, context_type)(func)
-
-    def _create_context_logger(self, label, context_type):
-        return _ContextLogger(
+    def __call__(self, func_or_label=None, show_args=False, show_kwargs=False):
+        if func_or_label is None or callable(func_or_label):
+            decorator = FunctionContextLogger(
+                templates=self.templates,
+                logger=self.logger,
+                log_level=self.log_level,
+                show_args=show_args,
+                show_kwargs=show_kwargs,
+            )
+            if func_or_label is None:
+                return decorator
+            # Decorator called without arguments so argument is function.
+            return decorator(func_or_label)
+        return ContextLogger(
+            templates=self.templates,
             logger=self.logger,
             log_level=self.log_level,
-            label=label,
-            context_type=context_type,
-            templates=self.templates,
+            label=func_or_label,
         )
