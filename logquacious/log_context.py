@@ -29,7 +29,7 @@ class LogContext:
         self.fatal = _ContextLoggerFactory(logger, logging.CRITICAL, templates)
 
 
-class _BaseContextLogger:
+class _BaseContextLogger(object):
 
     context_type = None
 

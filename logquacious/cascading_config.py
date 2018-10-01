@@ -1,9 +1,10 @@
-from collections import abc, deque
+from collections import deque
 
+from ._compat import Mapping
 from .utils import is_sequence
 
 
-class CascadingConfig(abc.Mapping):
+class CascadingConfig(Mapping):
     """Cascading configuration values.
 
     This class allows you to define parameter names that can match exactly, but
