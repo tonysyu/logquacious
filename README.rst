@@ -2,6 +2,7 @@
 logquacious
 ===========
 
+.. default-role:: literal
 
 .. image:: https://img.shields.io/pypi/v/logquacious.svg
     :target: https://pypi.python.org/pypi/logquacious
@@ -128,18 +129,20 @@ The general format for `context_templates` keys is::
 
 where square-brackes marks optional fields.
 
-``CONTEXT_TYPE`` can be any of the following:
-- 'function': Template used when called as a decorator.
-- 'context': Template used when called as a context manager.
+`CONTEXT_TYPE` can be any of the following:
 
-``LOG_LEVEL_NAME`` can be any of the following logging levels:
-- 'DEBUG'
-- 'INFO'
-- 'WARNING'
-- 'ERROR'
-- 'CRITICAL'
+- `function`: Template used when called as a decorator.
+- `context`: Template used when called as a context manager.
 
-For example, consider the cascade graph for ``function.start.DEBUG``, which
+`LOG_LEVEL_NAME` can be any of the following logging levels:
+
+- `DEBUG`
+- `INFO`
+- `WARNING`
+- `ERROR`
+- `CRITICAL`
+
+For example, consider the cascade graph for `function.start.DEBUG`, which
 looks like::
 
                     function.start.DEBUG
