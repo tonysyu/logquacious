@@ -67,7 +67,6 @@ setup(
     name='logquacious',
     packages=find_packages(include=['logquacious']),
     setup_requires=setup_requirements,
-    test_suite='tests',
     tests_require=test_requirements,
     extras_require={
         'dev': dev_requirements,
