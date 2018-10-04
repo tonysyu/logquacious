@@ -40,6 +40,8 @@ dev_requirements = [
     'bumpversion',
     'ipdb',
     'ipython',
+    'twine',
+    'wheel',
 ] + test_requirements + doc_requirements
 
 setup(
