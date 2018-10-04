@@ -32,8 +32,8 @@ class TestLogContext:
             pass
 
         self.logger.log.assert_has_calls([
-            mock.call(level, 'Start context label'),
-            mock.call(level, 'Finish context label'),
+            mock.call(level, 'Enter context label'),
+            mock.call(level, 'Exit context label'),
         ])
 
     @func_name_and_level_parameters
@@ -50,8 +50,8 @@ class TestLogContext:
         function()
 
         self.logger.log.assert_has_calls([
-            mock.call(level, 'Start function'),
-            mock.call(level, 'Finish function'),
+            mock.call(level, 'Call `function()`'),
+            mock.call(level, 'Return from `function`'),
         ])
 
     @func_name_and_level_parameters
