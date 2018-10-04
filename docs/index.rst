@@ -1,5 +1,5 @@
 Welcome to logquacious's documentation!
-======================================
+=======================================
 
 .. toctree::
    :maxdepth: 2

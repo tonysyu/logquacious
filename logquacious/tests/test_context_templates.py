@@ -122,7 +122,7 @@ class TestSecondaryContextTemplates:
     """Test secondary cascade for context templates.
 
     For example, consider the cascade pattern for `function.start.DEBUG`.
-    which has a cascade graph that looks like:
+    which has a cascade graph that looks like::
 
                         function.start.DEBUG
                              /       \
