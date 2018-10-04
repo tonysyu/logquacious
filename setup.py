@@ -21,6 +21,7 @@ setup_requirements = [
 test_requirements = [
     'coverage',
     'flake8',
+    'manuel',
     'mock',
     'pytest',
     'pytest-cov',
@@ -29,7 +30,6 @@ test_requirements = [
 ]
 
 doc_requirements = [
-    'manuel',
     'sphinx',
     'sphinx-autobuild',
     'sphinx_rtd_theme',
