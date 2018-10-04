@@ -72,6 +72,7 @@ setup(
     tests_require=test_requirements,
     extras_require={
         'dev': dev_requirements,
+        'docs': doc_requirements,
     },
     url='https://github.com/tonysyu/logquacious',
     version='0.2.0',
