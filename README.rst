@@ -24,14 +24,18 @@ in production. Logquacious aims to make logging as easy as possible.
 Quick start
 -----------
 
-To get started, you'll need set up logging for your application. For this
+To get started, first make sure logquacious is installed::
+
+    $ pip install logquacious
+
+You'll also need to set up logging for your application. For this
 example, we'll use a really simple configuration:
 
 .. code-block:: python
 
     import logging
 
-    logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
 The main interface to `logquacious` is the `LogManager`, which can be used for
 normal logging:
@@ -41,27 +45,28 @@ normal logging:
     import logquacious
 
     log = logquacious.LogManager(__name__)
+
+.. ignore-next-block
+.. code-block:: python
+
     log.debug('Nothing to see here.')
 
 Due to our simplified logging format defined earlier, that would output:
 
 .. code-block:: console
 
-    [DEBUG] Nothing to see here.
+    DEBUG: Nothing to see here.
 
 That isn't a very interesting example. In addition to basic logging,
 `LogManager` has a `context` attribute for use as a context manager:
 
 .. code-block:: python
 
-    with log.context.debug('greetings'):
-        print('Hello!')
-
-.. code-block:: console
-
-    [DEBUG] Start greetings
+    >>> with log.context.debug('greetings'):
+    ...    print('Hello!')
+    DEBUG: Enter greetings
     Hello!
-    [DEBUG] Finish greetings
+    DEBUG: Exit greetings
 
 The same attribute can be used as a decorator, as well:
 
@@ -70,17 +75,30 @@ The same attribute can be used as a decorator, as well:
     @log.context.info
     def divide(numerator, denominator):
         if denominator == 0:
-            log.warn('Attempted division by zero. Returning None')
+            log.warning('Attempted division by zero. Returning None')
             return None
         return numerator / denominator
 
-    divide(1, 0)
+    >>> divide(1, 0)
+    INFO: Call `divide()`
+    WARNING: Attempted division by zero. Returning None
+    INFO: Return from `divide`
 
-.. code-block:: console
+Even better, you can log input arguments as well:
 
-    [INFO] Start divide
-    [WARNING] Attempted division by zero. Returning None
-    [INFO] Finish divide
+.. code-block:: python
+
+    @log.context.info(show_args=True, show_kwargs=True)
+    def greet(name, char='-'):
+        msg = 'Hello, {name}!'.format(name=name)
+        print(msg)
+        print(char * len(msg))
+
+    >>> greet('Tony', char='*')
+    INFO: Call `greet('Tony', char='*')`
+    Hello, Tony!
+    ************
+    INFO: Return from `greet`
 
 There's also a special context manager for suppressing errors and logging:
 

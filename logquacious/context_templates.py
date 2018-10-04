@@ -52,8 +52,10 @@ CASCADE_MAP = _build_cascade_map()
 
 
 DEFAULT_TEMPLATES = {
-    'start': 'Start {label}',
-    'finish': 'Finish {label}',
+    'start': 'Enter {label}',
+    'finish': 'Exit {label}',
+    'function.start': 'Call `{label}({arguments})`',
+    'function.finish': 'Return from `{label}`',
 }
 
 
