@@ -3,9 +3,9 @@ import mock
 
 import pytest
 
-from .. import constants, context_templates
-from ..context_templates import DEFAULT_TEMPLATES, ContextTemplates
-from .utils import StartsWith
+from logquacious import constants, context_templates
+from logquacious.context_templates import DEFAULT_TEMPLATES, ContextTemplates
+from utils import StartsWith
 
 
 CONTEXT_TYPES = ['function', 'context']

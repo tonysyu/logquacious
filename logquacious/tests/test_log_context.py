@@ -3,7 +3,7 @@ import mock
 
 import pytest
 
-from .. import log_context
+from logquacious import log_context
 
 
 logging.basicConfig()

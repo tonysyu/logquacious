@@ -1,4 +1,4 @@
-from ..cascading_config import CascadingConfig
+from logquacious.cascading_config import CascadingConfig
 
 
 def test_get_simple():
