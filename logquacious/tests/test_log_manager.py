@@ -3,7 +3,7 @@ import mock
 
 import pytest
 
-from .. import log_manager
+from logquacious import log_manager
 
 
 class TestLogManager:

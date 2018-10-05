@@ -1,4 +1,4 @@
-from ..utils import is_string
+from logquacious.utils import is_string
 
 
 class StartsWith(str):

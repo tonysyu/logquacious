@@ -57,10 +57,12 @@ class ContextLogger(_BaseContextLogger):
                                             log_level=log_level, label=label)
 
     def __enter__(self):
-        self.log(self.start_template.format(label=self.label))
+        if self.start_template:
+            self.log(self.start_template.format(label=self.label))
 
     def __exit__(self, *args, **kwds):
-        self.log(self.finish_template.format(label=self.label))
+        if self.finish_template:
+            self.log(self.finish_template.format(label=self.label))
 
 
 class FunctionContextLogger(_BaseContextLogger):
@@ -86,9 +88,11 @@ class FunctionContextLogger(_BaseContextLogger):
             arg_string = self._format_function_args(args, kwargs)
             log_kwargs = {'label': self.label, 'arguments': arg_string}
 
-            self.log(self.start_template.format(**log_kwargs))
+            if self.start_template:
+                self.log(self.start_template.format(**log_kwargs))
             output = func(*args, **kwargs)
-            self.log(self.finish_template.format(**log_kwargs))
+            if self.finish_template:
+                self.log(self.finish_template.format(**log_kwargs))
 
             return output
 

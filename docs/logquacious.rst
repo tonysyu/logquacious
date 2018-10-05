@@ -1,13 +1,6 @@
 logquacious package
 ===================
 
-Subpackages
------------
-
-.. toctree::
-
-    logquacious.tests
-
 Submodules
 ----------
 
