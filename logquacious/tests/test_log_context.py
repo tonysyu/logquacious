@@ -77,6 +77,22 @@ class TestLogContext:
         ])
 
     @func_name_and_level_parameters
+    def test_null_start_template_for_decorator(self, func_name, level):
+        context = log_context.LogContext(self.logger, templates={
+            'function.start': '',
+            'function.finish': 'Finish',
+        })
+        decorator = getattr(context, func_name)
+
+        @decorator
+        def function():
+            pass
+
+        function()
+
+        self.logger.log.assert_called_once_with(level, "Finish")
+
+    @func_name_and_level_parameters
     def test_null_finish_template_for_decorator(self, func_name, level):
         context = log_context.LogContext(self.logger, templates={
             'function.start': 'Start',
@@ -91,6 +107,20 @@ class TestLogContext:
         function()
 
         self.logger.log.assert_called_once_with(level, "Start")
+
+    @func_name_and_level_parameters
+    def test_null_start_template_for_context_manager(self, func_name, level):
+        context = log_context.LogContext(self.logger, templates={
+            'context.start': '',
+            'context.finish': 'Finish',
+        })
+
+        context_manager = getattr(context, func_name)
+
+        with context_manager('context label'):
+            pass
+
+        self.logger.log.assert_called_once_with(level, "Finish")
 
     @func_name_and_level_parameters
     def test_null_finish_template_for_context_manager(self, func_name, level):
