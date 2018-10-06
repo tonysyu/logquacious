@@ -2,6 +2,14 @@
 History
 =======
 
+0.3.0 (2018-10-05)
+------------------
+
+- Add decorator support for `log.and_suppress` and `log.and_reraise` context
+  managers
+- Suppress logging for null/empty log message templates
+
+
 0.2.0 (2018-10-03)
 ------------------
 
