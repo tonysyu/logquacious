@@ -2,6 +2,11 @@
 History
 =======
 
+0.4.0 (2018-10-05)
+------------------
+
+- Fix config override behavior to extend rather than replace default templates
+
 0.3.0 (2018-10-05)
 ------------------
 
