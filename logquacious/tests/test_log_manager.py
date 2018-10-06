@@ -31,7 +31,7 @@ class TestLogManager:
         log_method('info msg')
         base_log_method.assert_called_once_with('info msg')
 
-    def test_log_and_suppress(self):
+    def test_log_and_suppress_context_manager(self):
         with self.log.and_suppress(ValueError):
             raise ValueError('Suppress me')
 
@@ -41,10 +41,37 @@ class TestLogManager:
             exc_info=True,
         )
 
-    def test_log_and_reraise(self):
+    def test_log_and_suppress_decorator(self):
+        @self.log.and_suppress(ValueError)
+        def function():
+            raise ValueError('Suppress me')
+
+        function()
+
+        self.logger.log.assert_called_once_with(
+            logging.ERROR,
+            "Suppressed error and logging",
+            exc_info=True,
+        )
+
+    def test_log_and_reraise_context_manager(self):
         with pytest.raises(ValueError):
             with self.log.and_reraise(ValueError):
                 raise ValueError('Test error')
+
+        self.logger.log.assert_called_once_with(
+            logging.ERROR,
+            "Logging error and reraising",
+            exc_info=True,
+        )
+
+    def test_log_and_reraise_decorator(self):
+        @self.log.and_reraise(ValueError)
+        def function():
+            raise ValueError('Suppress me')
+
+        with pytest.raises(ValueError):
+            function()
 
         self.logger.log.assert_called_once_with(
             logging.ERROR,
