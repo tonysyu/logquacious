@@ -173,6 +173,21 @@ The cascade is performed using a breadth-first search. If
 `function.start.DEBUG` is not defined, check `start.DEBUG` then check
 `function.start` *BEFORE* checking `start`.
 
+The default configuration is:
+
+.. code-block:: python
+
+    DEFAULT_TEMPLATES = {
+        'start': 'Enter {label}',
+        'finish': 'Exit {label}',
+        'function.start': 'Call `{label}({arguments})`',
+        'function.finish': 'Return from `{label}`',
+    }
+
+Note that custom configuration *updates* these defaults. For example, if you
+want to if you want to skip logging on exit for all context managers and
+decorators, you'll have set *both* `'finish'` and `'function.finish'` to an
+a `None` or an empty string.
 
 Credits
 -------

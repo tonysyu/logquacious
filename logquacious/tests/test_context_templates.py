@@ -5,7 +5,7 @@ import pytest
 
 from logquacious import constants, context_templates
 from logquacious.context_templates import DEFAULT_TEMPLATES, ContextTemplates
-from utils import StartsWith
+from utils import StartsWith, assert_dict_match
 
 
 CONTEXT_TYPES = ['function', 'context']
@@ -49,12 +49,14 @@ class TestContextTemplates:
     def test_config_missing_start(self):
         templates = ContextTemplates({'finish': 'custom'})
         assert templates['finish'] == 'custom'
-        assert templates['start'] == DEFAULT_TEMPLATES['start']
+        assert_dict_match(templates, DEFAULT_TEMPLATES,
+                          ['start', 'function.start', 'function.finish'])
 
     def test_config_missing_finish(self):
         templates = ContextTemplates({'start': 'custom'})
         assert templates['start'] == 'custom'
-        assert templates['finish'] == DEFAULT_TEMPLATES['finish']
+        assert_dict_match(templates, DEFAULT_TEMPLATES,
+                          ['finish', 'function.start', 'function.finish'])
 
     def test_null_config(self):
         config = ContextTemplates()
@@ -78,6 +80,8 @@ class TestMinimalContextTemplates:
         self.config = ContextTemplates({
             'start': self.start_text,
             'finish': self.finish_text,
+            'function.start': self.start_text,
+            'function.finish': self.finish_text,
         })
 
     @pytest.mark.parametrize('key', START_KEYS)
