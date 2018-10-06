@@ -1,5 +1,4 @@
 import logging
-from contextlib import contextmanager
 
 from . import utils
 from .log_context import LogContext
@@ -82,7 +81,6 @@ class LogManager:
         """
         return self.logger.fatal(msg, *args, **kwargs)
 
-    @contextmanager
     def and_suppress(self, allowed_exceptions,
                      msg="Suppressed error and logging",
                      level=logging.ERROR, exc_info=True):
@@ -94,12 +92,12 @@ class LogManager:
             level: Logging level for logging exceptions.
             exc_info: If True, include exception info.
         """
-        try:
-            yield
-        except allowed_exceptions:
+        def on_exception():
             self.log(level, msg, exc_info=exc_info)
+            return True  # Return True suppresses error in __exit__
 
-    @contextmanager
+        return utils.HandleException(allowed_exceptions, on_exception)
+
     def and_reraise(self, allowed_exceptions,
                     msg="Logging error and reraising",
                     level=logging.ERROR, exc_info=True):
@@ -111,8 +109,8 @@ class LogManager:
             level: Logging level for logging exceptions.
             exc_info: If True, include exception info.
         """
-        try:
-            yield
-        except allowed_exceptions:
+        def on_exception():
             self.log(level, msg, exc_info=exc_info)
             raise
+
+        return utils.HandleException(allowed_exceptions, on_exception)

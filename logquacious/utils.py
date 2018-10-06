@@ -1,6 +1,8 @@
 import logging
 from itertools import chain
 
+from ._compat import ContextDecorator
+
 
 def get_logger(name_or_logger):
     if isinstance(name_or_logger, logging.Logger):
@@ -40,3 +42,22 @@ def format_function_args(args, kwargs,
     )
     args = (repr(a) for a in args) if show_args else ()
     return ', '.join(chain(args, kv_pairs))
+
+
+class HandleException(ContextDecorator):
+
+    handled_exceptions = ()
+
+    def __init__(self, handled_exceptions, on_exception):
+        self.handled_exceptions = handled_exceptions
+        self.on_exception = on_exception
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if isinstance(exc_value, self.handled_exceptions):
+            return self.on_exception()
+
+    def on_exception(self):
+        raise NotImplementedError()
