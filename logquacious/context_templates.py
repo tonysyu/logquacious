@@ -62,8 +62,8 @@ DEFAULT_TEMPLATES = {
 class ContextTemplates(CascadingConfig):
 
     def __init__(self, config_dict=None):
-        config_dict = config_dict or DEFAULT_TEMPLATES
-        config_dict = config_dict.copy()
+        config_dict, additional_config = DEFAULT_TEMPLATES.copy(), config_dict
+        config_dict.update(additional_config or {})
         config_dict.setdefault('start', DEFAULT_TEMPLATES['start'])
         config_dict.setdefault('finish', DEFAULT_TEMPLATES['finish'])
         self._warn_if_given_unknown_keys(config_dict.keys())
