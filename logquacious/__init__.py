@@ -3,7 +3,7 @@
 
 __author__ = 'Tony S Yu'
 __email__ = 'tsyu80@gmail.com'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 from .log_manager import LogManager
 

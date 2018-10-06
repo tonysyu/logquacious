@@ -3,13 +3,26 @@
 
 """The setup script."""
 
+import re
 from setuptools import setup, find_packages
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
+
+
+def find_version():
+    with open('logquacious/__init__.py') as init_file:
+        version_file = init_file.read()
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
 
 requirements = [
 ]
@@ -75,6 +88,6 @@ setup(
         'docs': doc_requirements,
     },
     url='https://github.com/tonysyu/logquacious',
-    version='0.2.0',
+    version=find_version(),
     zip_safe=False,
 )
