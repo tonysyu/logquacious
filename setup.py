@@ -75,6 +75,6 @@ setup(
         'docs': doc_requirements,
     },
     url='https://github.com/tonysyu/logquacious',
-    version='0.3.0',
+    version='0.4.0',
     zip_safe=False,
 )
