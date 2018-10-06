@@ -1,26 +1,20 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 python:
-  - 3.6
-  - 3.5
-  - 2.7
+- 3.6
+- 3.5
+- 2.7
 install:
-    - pip install codecov
+- pip install codecov
 script:
-    - python setup.py test
+- python setup.py test
 after_success:
-    - codecov
-# Assuming you have installed the travis-ci CLI tool, after you
-# create the Github repo and add it to Travis, run the
-# following command to finish PyPI deployment setup:
-# $ travis encrypt --add deploy.password
+- codecov
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
   user: tonysyu
   password:
-    secure: PLEASE_REPLACE_ME
+    secure: LLEbVfg7Z8yfaCYx9bYubKC+zoBlCd/KMAk9VeZf38A2uH74O+XELtc++ztQUbYPB1NkIrndcFDhPI/NFqW4EUSRxBUmX0L4U4lU8rK6+UVKLpqYF4ytBP5X+cbOS9D6BpNC8n1oMUg4FDBsoCUNgGS6bDQIANfrPZYXJUyqBKj/wPYzA16yLmckIoKSHFs11vkXPXzzyV3ws/Qc6WGkKC2GOWvg3i4hqIKmlftFW6k9SukpgVCO5NH80gk/t69zrpBM1Cr9jaI+BANKPv6QwrgNG/NG9PawmVzimXLMefizJp870kFcpDZA7CUc0FzKxhL1iLx+SXN4tIcc0HV5a7s98eetAucnLZH8M7toIQVKT65KWBQbusUgDrkX7x4SAWN8qatKkSm8kEvbLCN6cVef4jCU98lDI+QxrrMCE8evCjaXbu6lOQPTZkWqryJLYBOc305rr470CujnnbzFIkTE+LzeIsUEi+w8EQA0weCKOBNKXFmlm1xeAXfrDGt0N31iDXm0XnYSb2PnuxC9mPpe5+PSAyOs/BdWjuopd/M+bhHES9k7H65WiPK6miIjh4kZ4Kr8UwFl7RLkjXi5Q937RuRPOqPgEwUORpUF3yyPU+maywvP5oYF61mhKSjN/uXnvNWzJh0aNtvNFtLg/5ruPqCMOdtz+dcziZ+UvDI=
   on:
     tags: true
     repo: tonysyu/logquacious
