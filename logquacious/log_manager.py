@@ -84,7 +84,7 @@ class LogManager:
     def and_suppress(self, allowed_exceptions,
                      msg="Suppressed error and logging",
                      level=logging.ERROR, exc_info=True):
-        """Context manager that logs and suppreses given error.
+        """Context manager that logs and suppresses given error.
 
         Arguments:
             allowed_exceptions: Exception(s) to log and suppress.

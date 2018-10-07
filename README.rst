@@ -156,7 +156,7 @@ The general format for `context_templates` keys is::
 
     [CONTEXT_TYPE.]('start'|'finish')[.LOG_LEVEL_NAME]
 
-where square-brackes marks optional fields.
+where square-brackets marks optional fields.
 
 `CONTEXT_TYPE` can be any of the following:
 

@@ -94,7 +94,7 @@ Ready to contribute? Here's how to set up `logquacious` for local development.
 Building the documentation
 ..........................
 
-As mentioned above, it's always helpful to have more documentaion. To build the
+As mentioned above, it's always helpful to have more documentation. To build the
 docs you can simply run::
 
     $ make docs
