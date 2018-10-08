@@ -12,11 +12,11 @@ class LogContext:
     """Manager for context managers/decorators used for logging.
 
     Attributes:
-        debug: Decortor/context-manager with level logging.DEBUG.
-        info: Decortor/context-manager with level logging.INFO.
-        warning: Decortor/context-manager with level logging.WARNING.
-        error: Decortor/context-manager with level logging.ERROR.
-        fatal: Decortor/context-manager with level logging.CRITICAL.
+        debug: Decorator/context-manager with level logging.DEBUG.
+        info: Decorator/context-manager with level logging.INFO.
+        warning: Decorator/context-manager with level logging.WARNING.
+        error: Decorator/context-manager with level logging.ERROR.
+        fatal: Decorator/context-manager with level logging.CRITICAL.
     """
 
     def __init__(self, logger, templates=None):
