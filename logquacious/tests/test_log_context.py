@@ -32,8 +32,8 @@ class TestLogContext:
             pass
 
         self.logger.log.assert_has_calls([
-            mock.call(level, 'Enter context label'),
-            mock.call(level, 'Exit context label'),
+            mock.call(level, 'Enter context label', stacklevel=3),
+            mock.call(level, 'Exit context label', stacklevel=3),
         ])
 
     @func_name_and_level_parameters
@@ -50,8 +50,8 @@ class TestLogContext:
         function()
 
         self.logger.log.assert_has_calls([
-            mock.call(level, 'Call `function()`'),
-            mock.call(level, 'Return from `function`'),
+            mock.call(level, 'Call `function()`', stacklevel=3),
+            mock.call(level, 'Return from `function`', stacklevel=3),
         ])
 
     @func_name_and_level_parameters
@@ -72,8 +72,8 @@ class TestLogContext:
         function('a', b=1)
 
         self.logger.log.assert_has_calls([
-            mock.call(level, "Called `function('a', b=1)`"),
-            mock.call(level, 'Return from `function`'),
+            mock.call(level, "Called `function('a', b=1)`", stacklevel=3),
+            mock.call(level, 'Return from `function`', stacklevel=3),
         ])
 
     @func_name_and_level_parameters
@@ -90,7 +90,7 @@ class TestLogContext:
 
         function()
 
-        self.logger.log.assert_called_once_with(level, "Finish")
+        self.logger.log.assert_called_once_with(level, "Finish", stacklevel=3)
 
     @func_name_and_level_parameters
     def test_null_finish_template_for_decorator(self, func_name, level):
@@ -106,7 +106,7 @@ class TestLogContext:
 
         function()
 
-        self.logger.log.assert_called_once_with(level, "Start")
+        self.logger.log.assert_called_once_with(level, "Start", stacklevel=3)
 
     @func_name_and_level_parameters
     def test_null_start_template_for_context_manager(self, func_name, level):
@@ -120,7 +120,7 @@ class TestLogContext:
         with context_manager('context label'):
             pass
 
-        self.logger.log.assert_called_once_with(level, "Finish")
+        self.logger.log.assert_called_once_with(level, "Finish", stacklevel=3)
 
     @func_name_and_level_parameters
     def test_null_finish_template_for_context_manager(self, func_name, level):
@@ -134,4 +134,4 @@ class TestLogContext:
         with context_manager('context label'):
             pass
 
-        self.logger.log.assert_called_once_with(level, "Start")
+        self.logger.log.assert_called_once_with(level, "Start", stacklevel=3)

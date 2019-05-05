@@ -39,6 +39,7 @@ class TestLogManager:
             logging.ERROR,
             "Suppressed error and logging",
             exc_info=True,
+            stacklevel=3,
         )
 
     def test_log_and_suppress_decorator(self):
@@ -52,6 +53,7 @@ class TestLogManager:
             logging.ERROR,
             "Suppressed error and logging",
             exc_info=True,
+            stacklevel=3,
         )
 
     def test_log_and_reraise_context_manager(self):
@@ -63,6 +65,7 @@ class TestLogManager:
             logging.ERROR,
             "Logging error and reraising",
             exc_info=True,
+            stacklevel=3,
         )
 
     def test_log_and_reraise_decorator(self):
@@ -77,6 +80,7 @@ class TestLogManager:
             logging.ERROR,
             "Logging error and reraising",
             exc_info=True,
+            stacklevel=3,
         )
 
     @pytest.mark.parametrize('method', [
