@@ -2,6 +2,13 @@
 History
 =======
 
+0.5.0 (2019-05-05)
+------------------
+
+- Backport `stacklevel` keyword argument from Python 3.8 and configure
+  stacklevel such that logging utilities report the context (e.g. filename
+  and line number) where `logquacious` utilities are called.
+
 0.4.0 (2018-10-05)
 ------------------
 
