@@ -81,7 +81,7 @@ class ConfigurableStacklevelLoggerMixin(object):
     See https://github.com/python/cpython/pull/7424
     """
 
-    def findCaller(self, stack_info=False, stacklevel=1):
+    def findCaller(self, stack_info=False, stacklevel=1):  # pragma: no cover
         """
         Find the stack frame of the caller so that we can note the source
         file name, line number and function name.
@@ -118,7 +118,7 @@ class ConfigurableStacklevelLoggerMixin(object):
         return rv
 
     def _log(self, level, msg, args, exc_info=None, extra=None,
-             stack_info=False, stacklevel=1):
+             stack_info=False, stacklevel=1):  # pragma: no cover
         """
         Low-level logging routine which creates a LogRecord and then calls
         all the handlers of this logger to handle the record.
@@ -130,9 +130,9 @@ class ConfigurableStacklevelLoggerMixin(object):
             # IronPython can use logging.
             try:
                 fn, lno, func, sinfo = self.findCaller(stack_info, stacklevel)
-            except ValueError:  # pragma: no cover
+            except ValueError:
                 fn, lno, func = "(unknown file)", 0, "(unknown function)"
-        else:  # pragma: no cover
+        else:
             fn, lno, func = "(unknown file)", 0, "(unknown function)"
         if exc_info:
             if isinstance(exc_info, BaseException):

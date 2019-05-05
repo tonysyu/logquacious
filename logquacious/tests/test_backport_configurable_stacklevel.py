@@ -1,6 +1,8 @@
 import logging
 from unittest import TestCase
 
+import pytest
+
 from logquacious.backport_configurable_stacklevel import PatchedLoggerMixin
 
 
@@ -15,7 +17,20 @@ class RecordingHandler(logging.NullHandler):
         self.records.append(record)
 
 
-class TestPatchedLoggerMixin(PatchedLoggerMixin, TestCase):
+class TestPatchedLoggerMixin:
+
+    def test_error_raised_if_no_logger_attribute(self):
+
+        class LogManager(PatchedLoggerMixin):
+            pass
+
+        manager = LogManager()
+        with pytest.raises(AttributeError):
+            with manager.temp_monkey_patched_logger():
+                pass
+
+
+class TestPatchedLoggerMixinLogging(PatchedLoggerMixin, TestCase):
     """TestCase for PatchedLoggerMixin adapted from cpython logger tests.
 
     Adapted from `LoggerTest` class of cpython logger tests.
