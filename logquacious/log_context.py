@@ -3,6 +3,7 @@ import logging
 
 from . import utils
 from .context_templates import ContextTemplates
+from .backport_configurable_stacklevel import PatchedLoggerMixin
 
 
 __all__ = ['LogContext']
@@ -12,11 +13,11 @@ class LogContext:
     """Manager for context managers/decorators used for logging.
 
     Attributes:
-        debug: Decorator/context-manager with level logging.DEBUG.
-        info: Decorator/context-manager with level logging.INFO.
-        warning: Decorator/context-manager with level logging.WARNING.
-        error: Decorator/context-manager with level logging.ERROR.
-        fatal: Decorator/context-manager with level logging.CRITICAL.
+        debug: Decorator/context-manager with level `logging.DEBUG`.
+        info: Decorator/context-manager with level `logging.INFO`.
+        warning: Decorator/context-manager with level `logging.WARNING`.
+        error: Decorator/context-manager with level `logging.ERROR`.
+        fatal: Decorator/context-manager with level `logging.CRITICAL`.
     """
 
     def __init__(self, logger, templates=None):
@@ -29,11 +30,13 @@ class LogContext:
         self.fatal = _ContextLoggerFactory(logger, logging.CRITICAL, templates)
 
 
-class _BaseContextLogger(object):
+class _BaseContextLogger(PatchedLoggerMixin):
 
     context_type = None
 
     def __init__(self, templates, logger, log_level=logging.INFO, label=None):
+        super(_BaseContextLogger, self).__init__()
+
         self.logger = utils.get_logger(logger)
         self.log_level = log_level
         self.label = label
@@ -45,7 +48,14 @@ class _BaseContextLogger(object):
         self.finish_template = templates.get(finish_key)
 
     def log(self, msg, *args, **kwargs):
-        self.logger.log(self.log_level, msg, *args, **kwargs)
+        # Stacklevel 3:
+        #   1: This function
+        #   2: Decorated function for `FunctionContextLogger`
+        #      or __enter__/__exit__ of `ContextLogger`.
+        #   3: Function that was decorated or the original call of the context.
+        kwargs.setdefault('stacklevel', 3)
+        with self.temp_monkey_patched_logger():
+            self.logger.log(self.log_level, msg, *args, **kwargs)
 
 
 class ContextLogger(_BaseContextLogger):
@@ -84,7 +94,7 @@ class FunctionContextLogger(_BaseContextLogger):
         self.label = func.__name__
 
         @functools.wraps(func)
-        def decorated(*args, **kwargs):
+        def decorated_func(*args, **kwargs):
             arg_string = self._format_function_args(args, kwargs)
             log_kwargs = {'label': self.label, 'arguments': arg_string}
 
@@ -96,13 +106,14 @@ class FunctionContextLogger(_BaseContextLogger):
 
             return output
 
-        return decorated
+        return decorated_func
 
 
 class _ContextLoggerFactory:
-    """Factory returning a `_ContextLogger` for a specific logging level.
+    """Factory returning a `ContextLogger` for a specific logging level.
 
-    Note that each use as a context manager or decorator
+    Note that each use as a context manager or decorator creates a new instance
+    of `ContextLogger` or `FunctionContextLogger`.
     """
 
     def __init__(self, logger, log_level, templates):
