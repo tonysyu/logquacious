@@ -139,6 +139,11 @@ class ConfigurableStacklevelLoggerMixin(object):
                 exc_info = (type(exc_info), exc_info, exc_info.__traceback__)
             elif not isinstance(exc_info, tuple):
                 exc_info = sys.exc_info()
-        record = self.makeRecord(self.name, level, fn, lno, msg, args,
-                                 exc_info, func, extra, sinfo)
+
+        if sys.version_info.major >= 3:
+            record = self.makeRecord(self.name, level, fn, lno, msg, args,
+                                     exc_info, func, extra, sinfo)
+        else:
+            record = self.makeRecord(self.name, level, fn, lno, msg, args,
+                                     exc_info, func, extra)
         self.handle(record)
