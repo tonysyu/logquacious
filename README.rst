@@ -28,7 +28,9 @@ find read more at the official `ReadTheDocs documentation`_.
 Quick start
 -----------
 
-To get started, first make sure logquacious is installed::
+To get started, first make sure logquacious is installed:
+
+.. code-block:: console
 
     $ pip install logquacious
 

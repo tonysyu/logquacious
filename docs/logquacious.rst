@@ -4,6 +4,14 @@ logquacious package
 Submodules
 ----------
 
+logquacious.backport\_configurable\_stacklevel module
+-----------------------------------------------------
+
+.. automodule:: logquacious.backport_configurable_stacklevel
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 logquacious.cascading\_config module
 ------------------------------------
 
