@@ -45,7 +45,8 @@ articles, and such.
 Submit Feedback
 ...............
 
-The best way to send feedback is to file an issue at https://github.com/tonysyu/logquacious/issues.
+The best way to send feedback is to file an issue at
+https://github.com/tonysyu/logquacious/issues.
 
 If you are proposing a feature:
 
@@ -80,7 +81,7 @@ Ready to contribute? Here's how to set up `logquacious` for local development.
 
 5. When you're done making changes, check that your changes pass the tests::
 
-    $ python setup.py test
+    $ tox
 
 6. Commit your changes and push your branch to GitHub::
 
@@ -94,8 +95,8 @@ Ready to contribute? Here's how to set up `logquacious` for local development.
 Building the documentation
 ..........................
 
-As mentioned above, it's always helpful to have more documentation. To build the
-docs you can simply run::
+As mentioned above, it's always helpful to have more documentation. To build
+the docs you can simply run::
 
     $ make docs
 
@@ -103,9 +104,9 @@ It's also good practice to run the test suite for the docs::
 
     $ python test_docs.py
 
-Currently, this only runs tests of the ReadMe file. Also, these tests aren't currently integrated
-with the main test suite because it relies on overriding the output stream of the logger to
-function.
+Currently, this only runs tests of the ReadMe file. Also, these tests aren't
+currently integrated with the main test suite because it relies on overriding
+the output stream of the logger to function.
 
 
 Pull Request Guidelines
@@ -126,7 +127,11 @@ Tips
 
 To run a subset of tests::
 
-$ py.test tests.test_logquacious
+$ tox tests.test_logquacious
+
+To run tests with a specific Python version, run::
+
+$ tox --env py36
 
 
 Deploying
