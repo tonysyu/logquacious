@@ -4,6 +4,9 @@ logquacious
 
 .. default-role:: literal
 
+.. image:: https://img.shields.io/apm/l/vim-mode.svg
+    :target: https://github.com/tonysyu/logquacious/blob/master/LICENSE
+
 .. image:: https://img.shields.io/pypi/v/logquacious.svg
     :target: https://pypi.python.org/pypi/logquacious
 
