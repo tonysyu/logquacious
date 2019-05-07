@@ -14,10 +14,6 @@ with open('HISTORY.rst') as history_file:
 requirements = [
 ]
 
-setup_requirements = [
-    'pytest-runner',
-]
-
 test_requirements = [
     'coverage',
     'flake8',
@@ -68,7 +64,6 @@ setup(
     keywords='logquacious',
     name='logquacious',
     packages=find_packages(include=['logquacious']),
-    setup_requires=setup_requirements,
     tests_require=test_requirements,
     extras_require={
         'dev': dev_requirements,
